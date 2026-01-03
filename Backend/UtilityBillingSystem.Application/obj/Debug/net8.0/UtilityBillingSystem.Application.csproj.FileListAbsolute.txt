@@ -1,0 +1,15 @@
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\bin\Debug\net8.0\UtilityBillingSystem.Application.deps.json
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\bin\Debug\net8.0\UtilityBillingSystem.Application.dll
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\bin\Debug\net8.0\UtilityBillingSystem.Application.pdb
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\bin\Debug\net8.0\UtilityBillingSystem.Core.dll
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\bin\Debug\net8.0\UtilityBillingSystem.Core.pdb
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\UtilityBillingSystem.Application.csproj.AssemblyReference.cache
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\UtilityBillingSystem.Application.GeneratedMSBuildEditorConfig.editorconfig
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\UtilityBillingSystem.Application.AssemblyInfoInputs.cache
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\UtilityBillingSystem.Application.AssemblyInfo.cs
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\UtilityBillingSystem.Application.csproj.CoreCompileInputs.cache
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\UtilityB.C8151E41.Up2Date
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\UtilityBillingSystem.Application.dll
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\refint\UtilityBillingSystem.Application.dll
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\UtilityBillingSystem.Application.pdb
+D:\DotNet\Capstone_Project\UtilityBillingSystem.Application\obj\Debug\net8.0\ref\UtilityBillingSystem.Application.dll

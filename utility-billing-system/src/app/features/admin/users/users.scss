@@ -1,0 +1,176 @@
+.users-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  button {
+    mat-icon {
+      margin-right: 8px;
+    }
+  }
+}
+
+.filter-card {
+  margin-bottom: 24px;
+
+  .filters {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .search-field {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .chip-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      mat-chip {
+        cursor: pointer;
+        background-color: #f5f5f5;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #e0e0e0;
+        }
+
+        &.selected {
+          background-color: #667eea;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.table-card {
+  .table-container {
+    position: relative;
+    min-height: 400px;
+    overflow-x: auto;
+
+    .table-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .users-table {
+    width: 100%;
+
+    th {
+      font-weight: 600;
+      color: #555;
+      background-color: #f5f5f5;
+    }
+
+    .user-info {
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+
+      strong {
+        color: #333;
+      }
+
+      small {
+        color: #666;
+        font-size: 12px;
+      }
+    }
+
+    .id-proof {
+      display: flex;
+      flex-direction: column;
+      gap: 2px;
+
+      small {
+        color: #888;
+        font-size: 11px;
+        text-transform: uppercase;
+      }
+
+      span {
+        color: #333;
+        font-size: 13px;
+      }
+    }
+
+    mat-chip {
+      font-size: 11px;
+      min-height: 24px;
+      padding: 0 8px;
+    }
+
+    .badge-admin {
+      background-color: #f44336;
+      color: white;
+    }
+
+    .badge-billing {
+      background-color: #2196F3;
+      color: white;
+    }
+
+    .badge-account {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .badge-consumer {
+      background-color: #FF9800;
+      color: white;
+    }
+
+    .badge-pending {
+      background-color: #9E9E9E;
+      color: white;
+    }
+
+    .text-muted {
+      color: #999;
+      font-style: italic;
+    }
+  }
+
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: #999;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+    }
+  }
+}

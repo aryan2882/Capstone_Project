@@ -1,0 +1,134 @@
+<h2 mat-dialog-title>{{getTitle()}}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="tariffForm">
+    <!-- Basic Information -->
+    <h3 class="section-title">Basic Information</h3>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Plan Name</mat-label>
+      <input matInput formControlName="planName" placeholder="e.g., Residential Electricity">
+      <mat-icon matPrefix>description</mat-icon>
+      <mat-error *ngIf="tariffForm.get('planName')?.hasError('required')">
+        Plan name is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Utility Type</mat-label>
+      <mat-select formControlName="utilityTypeId">
+        <mat-option *ngFor="let type of utilityTypes" [value]="type.utilityTypeId">
+          {{type.name}}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>category</mat-icon>
+      <mat-error>Utility type is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Effective From</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="effectiveFrom">
+      <mat-datepicker-toggle matSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>Effective date is required</mat-error>
+    </mat-form-field>
+
+    <!-- Charges -->
+    <h3 class="section-title">Charges & Taxes</h3>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Fixed Monthly Charge (₹)</mat-label>
+        <input matInput type="number" formControlName="fixedMonthlyCharge" step="0.01">
+        <mat-icon matPrefix>account_balance_wallet</mat-icon>
+        <mat-error>Must be 0 or greater</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Minimum Charge (₹)</mat-label>
+        <input matInput type="number" formControlName="minimumCharge" step="0.01">
+        <mat-icon matPrefix>attach_money</mat-icon>
+        <mat-error>Must be 0 or greater</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tax Percentage (%)</mat-label>
+      <input matInput type="number" formControlName="taxPercentage" step="0.01">
+      <mat-icon matPrefix>percent</mat-icon>
+      <mat-hint>GST or applicable tax percentage</mat-hint>
+      <mat-error>Must be between 0 and 100</mat-error>
+    </mat-form-field>
+
+    <!-- Tariff Type -->
+    <div class="toggle-field">
+      <mat-slide-toggle formControlName="isSlabBased" color="primary">
+        <span class="toggle-label">Slab-Based Pricing</span>
+      </mat-slide-toggle>
+      <small class="toggle-hint">
+        {{tariffForm.get('isSlabBased')?.value ? 'Uses multiple rate slabs' : 'Uses flat rate'}}
+      </small>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Tariff Slabs -->
+    <div class="slabs-section">
+      <div class="slabs-header">
+        <h3 class="section-title">Tariff Slabs</h3>
+        <button mat-raised-button color="accent" type="button" (click)="addSlab()">
+          <mat-icon>add</mat-icon>
+          Add Slab
+        </button>
+      </div>
+
+      <div class="slabs-list" formArrayName="tariffSlabs">
+        <div *ngFor="let slab of tariffSlabs.controls; let i = index" 
+             class="slab-item" [formGroupName]="i">
+          <div class="slab-header">
+            <span class="slab-number">Slab {{i + 1}}</span>
+            <button mat-icon-button color="warn" type="button" 
+                    (click)="removeSlab(i)" *ngIf="tariffSlabs.length > 1">
+              <mat-icon>delete</mat-icon>
+            </button>
+          </div>
+
+          <div class="slab-fields">
+            <mat-form-field appearance="outline" class="slab-field">
+              <mat-label>From Unit</mat-label>
+              <input matInput type="number" formControlName="fromUnit" step="1">
+              <mat-error>Required</mat-error>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="slab-field">
+              <mat-label>To Unit</mat-label>
+              <input matInput type="number" formControlName="toUnit" 
+                     placeholder="Leave empty for unlimited" step="1">
+              <mat-hint>Leave empty for last slab</mat-hint>
+            </mat-form-field>
+
+            <mat-form-field appearance="outline" class="slab-field">
+              <mat-label>Rate per Unit (₹)</mat-label>
+              <input matInput type="number" formControlName="ratePerUnit" step="0.01">
+              <mat-error>Required</mat-error>
+            </mat-form-field>
+          </div>
+        </div>
+      </div>
+
+      <div class="slab-info" *ngIf="tariffSlabs.length === 0">
+        <mat-icon>info</mat-icon>
+        <p>Add at least one tariff slab to define pricing structure</p>
+      </div>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" 
+          [disabled]="!tariffForm.valid">
+    <mat-icon>{{mode === 'create' ? 'add' : 'save'}}</mat-icon>
+    {{mode === 'create' ? 'Create Tariff' : 'Update Tariff'}}
+  </button>
+</mat-dialog-actions>

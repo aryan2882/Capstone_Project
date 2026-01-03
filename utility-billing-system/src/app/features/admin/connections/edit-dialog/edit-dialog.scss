@@ -1,0 +1,38 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+mat-dialog-content {
+  min-width: 500px;
+  padding: 24px;
+}
+
+.connection-info {
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+  margin-bottom: 24px;
+
+  p {
+    margin: 8px 0;
+    font-size: 14px;
+
+    strong {
+      color: #555;
+    }
+  }
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+
+  button {
+    mat-icon {
+      margin-right: 4px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}

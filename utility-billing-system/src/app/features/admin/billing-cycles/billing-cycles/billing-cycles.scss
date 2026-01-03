@@ -1,0 +1,249 @@
+.billing-cycles-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+  flex-wrap: wrap;
+  gap: 16px;
+
+  .header-left {
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    flex-wrap: wrap;
+
+    h1 {
+      margin: 0;
+      font-size: 28px;
+      font-weight: 500;
+      color: #333;
+    }
+
+    .current-cycle-chip {
+      background-color: #4CAF50;
+      color: white;
+      font-weight: 500;
+
+      mat-icon {
+        margin-right: 4px;
+      }
+    }
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+
+    button {
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+.filter-card {
+  margin-bottom: 24px;
+
+  .filters {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .search-field {
+      flex: 1;
+      min-width: 300px;
+    }
+
+    .chip-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      mat-chip {
+        cursor: pointer;
+        background-color: #f5f5f5;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #e0e0e0;
+        }
+
+        &.selected {
+          background-color: #667eea;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.table-card {
+  .table-container {
+    position: relative;
+    min-height: 400px;
+    overflow-x: auto;
+
+    .table-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .billing-cycles-table {
+    width: 100%;
+
+    th {
+      font-weight: 600;
+      color: #555;
+      background-color: #f5f5f5;
+    }
+
+    .cycle-name {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .cycle-icon {
+        color: #667eea;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+
+      .cycle-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        strong {
+          color: #333;
+          font-size: 15px;
+        }
+
+        small {
+          color: #666;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .period-info {
+      .date-range {
+        display: flex;
+        align-items: center;
+        gap: 8px;
+
+        mat-icon {
+          color: #666;
+          font-size: 18px;
+          width: 18px;
+          height: 18px;
+        }
+
+        span {
+          font-size: 13px;
+          color: #333;
+        }
+      }
+    }
+
+    .deadlines-info {
+      display: flex;
+      flex-direction: column;
+      gap: 6px;
+
+      .deadline-item {
+        display: flex;
+        align-items: center;
+        gap: 6px;
+
+        mat-icon {
+          font-size: 16px;
+          width: 16px;
+          height: 16px;
+          color: #666;
+        }
+
+        small {
+          font-size: 12px;
+          color: #555;
+        }
+      }
+    }
+
+    .status-info {
+      margin-top: 4px;
+
+      .days-remaining {
+        color: #2196F3;
+        font-size: 11px;
+        font-weight: 500;
+      }
+
+      .overdue {
+        color: #F44336;
+        font-size: 11px;
+        font-weight: 500;
+      }
+    }
+
+    mat-chip {
+      font-size: 11px;
+      min-height: 24px;
+      padding: 0 8px;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+      }
+    }
+
+    .status-current {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .status-upcoming {
+      background-color: #2196F3;
+      color: white;
+    }
+
+    .status-closed {
+      background-color: #9E9E9E;
+      color: white;
+    }
+  }
+
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: #999;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+    }
+  }
+}

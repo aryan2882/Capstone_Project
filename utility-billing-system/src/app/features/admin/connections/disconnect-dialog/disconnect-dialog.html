@@ -1,0 +1,42 @@
+<h2 mat-dialog-title>
+  <mat-icon color="warn">power_off</mat-icon>
+  Disconnect Connection
+</h2>
+
+<mat-dialog-content>
+  <div class="warning-section">
+    <mat-icon>warning</mat-icon>
+    <p>You are about to disconnect this connection. This action will stop all services for this consumer.</p>
+  </div>
+
+  <div class="connection-info">
+    <p><strong>Consumer:</strong> {{connection.consumerName}}</p>
+    <p><strong>Meter Number:</strong> {{connection.meterNumber}}</p>
+    <p><strong>Utility Type:</strong> {{connection.utilityTypeName}}</p>
+  </div>
+
+  <form [formGroup]="disconnectForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Reason for Disconnection</mat-label>
+      <textarea matInput formControlName="reason" rows="4"
+                placeholder="Please provide a detailed reason for disconnection"></textarea>
+      <mat-icon matPrefix>description</mat-icon>
+      <mat-hint>Minimum 10 characters</mat-hint>
+      <mat-error *ngIf="disconnectForm.get('reason')?.hasError('required')">
+        Reason is required
+      </mat-error>
+      <mat-error *ngIf="disconnectForm.get('reason')?.hasError('minlength')">
+        Please provide at least 10 characters
+      </mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="warn" (click)="onSubmit()" 
+          [disabled]="!disconnectForm.valid">
+    <mat-icon>power_off</mat-icon>
+    Disconnect
+  </button>
+</mat-dialog-actions>

@@ -1,0 +1,71 @@
+<h2 mat-dialog-title>{{getTitle()}}</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="utilityTypeForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Name</mat-label>
+      <input matInput formControlName="name" placeholder="e.g., Electricity">
+      <mat-icon matPrefix>category</mat-icon>
+      <mat-error *ngIf="utilityTypeForm.get('name')?.hasError('required')">
+        Name is required
+      </mat-error>
+      <mat-error *ngIf="utilityTypeForm.get('name')?.hasError('minlength')">
+        Name must be at least 2 characters
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Unit of Measurement</mat-label>
+      <input matInput formControlName="unitOfMeasurement" placeholder="e.g., kWh, Liters, m³">
+      <mat-icon matPrefix>straighten</mat-icon>
+      <mat-error *ngIf="utilityTypeForm.get('unitOfMeasurement')?.hasError('required')">
+        Unit of measurement is required
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Description</mat-label>
+      <textarea matInput formControlName="description" rows="3" 
+                placeholder="Enter description"></textarea>
+      <mat-icon matPrefix>description</mat-icon>
+      <mat-error *ngIf="utilityTypeForm.get('description')?.hasError('required')">
+        Description is required
+      </mat-error>
+      <mat-error *ngIf="utilityTypeForm.get('description')?.hasError('minlength')">
+        Description must be at least 10 characters
+      </mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Base Rate (₹)</mat-label>
+      <input matInput type="number" formControlName="baseRate" 
+             placeholder="0.00" step="0.01">
+      <mat-icon matPrefix>attach_money</mat-icon>
+      <mat-hint>Rate per unit of measurement</mat-hint>
+      <mat-error *ngIf="utilityTypeForm.get('baseRate')?.hasError('required')">
+        Base rate is required
+      </mat-error>
+      <mat-error *ngIf="utilityTypeForm.get('baseRate')?.hasError('min')">
+        Base rate must be greater than 0
+      </mat-error>
+    </mat-form-field>
+
+    <div class="toggle-field" *ngIf="mode === 'edit'">
+      <mat-slide-toggle formControlName="isActive" color="primary">
+        <span class="toggle-label">Active Status</span>
+      </mat-slide-toggle>
+      <small class="toggle-hint">
+        {{utilityTypeForm.get('isActive')?.value ? 'This utility type is active' : 'This utility type is inactive'}}
+      </small>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" 
+          [disabled]="!utilityTypeForm.valid">
+    <mat-icon>{{mode === 'create' ? 'add' : 'save'}}</mat-icon>
+    {{mode === 'create' ? 'Create' : 'Update'}}
+  </button>
+</mat-dialog-actions>

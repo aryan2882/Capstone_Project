@@ -1,0 +1,178 @@
+<!-- consumer-dashboard.component.html - Updated for Signals -->
+<div class="dashboard-container">
+  <!-- Loading State -->
+  <div *ngIf="loading()" class="loading-container">
+    <mat-spinner></mat-spinner>
+    <p>Loading dashboard...</p>
+  </div>
+
+  <!-- Dashboard Content -->
+  <div *ngIf="!loading()">
+    <!-- Welcome Header -->
+    <div class="welcome-header">
+      <div>
+        <h1>{{ getGreeting() }}, {{ profile?.firstName }}! 👋</h1>
+        <p class="subtitle">Here's your utility account overview</p>
+      </div>
+      <div class="consumer-info">
+        <mat-chip>{{ profile?.consumerCode }}</mat-chip>
+      </div>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+      <mat-card class="stat-card">
+        <div class="stat-icon connections">
+          <mat-icon>power</mat-icon>
+        </div>
+        <div class="stat-content">
+          <h3>{{ dashboardStats.activeConnections }}/{{ dashboardStats.totalConnections }}</h3>
+          <p>Active Connections</p>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-icon bills">
+          <mat-icon>receipt</mat-icon>
+        </div>
+        <div class="stat-content">
+          <h3>{{ dashboardStats.unpaidBills }}</h3>
+          <p>Unpaid Bills</p>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card">
+        <div class="stat-icon outstanding">
+          <mat-icon>currency_rupee</mat-icon>
+        </div>
+        <div class="stat-content">
+          <h3>₹{{ dashboardStats.totalOutstanding | number:'1.2-2' }}</h3>
+          <p>Total Outstanding</p>
+        </div>
+      </mat-card>
+
+      <mat-card class="stat-card action-card" routerLink="/consumer/bills">
+        <div class="stat-icon action">
+          <mat-icon>payment</mat-icon>
+        </div>
+        <div class="stat-content">
+          <h3>Pay Now</h3>
+          <p>Quick Payment</p>
+        </div>
+        <mat-icon class="arrow-icon">arrow_forward</mat-icon>
+      </mat-card>
+    </div>
+
+    <!-- Main Content Grid -->
+    <div class="content-grid">
+      <!-- Recent Bills -->
+      <mat-card class="content-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>receipt</mat-icon>
+            Recent Bills
+          </mat-card-title>
+          <button mat-button color="primary" routerLink="/consumer/bills">
+            View All
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="recentBills.length === 0" class="empty-state">
+            <mat-icon>inbox</mat-icon>
+            <p>No bills available</p>
+          </div>
+          
+          <div class="bill-list" *ngIf="recentBills.length > 0">
+            <div class="bill-item" *ngFor="let bill of recentBills">>
+              <div class="bill-info">
+                <div class="bill-header">
+                  <span class="bill-number">{{ bill.billNumber }}</span>
+                  <mat-chip [class]="getBillStatusClass(bill.status)">
+                    {{ bill.status }}
+                  </mat-chip>
+                </div>
+                <div class="bill-details">
+                  <span class="utility-type">
+                    <mat-icon>{{ bill.utilityTypeName === 'Electricity' ? 'bolt' : 'water_drop' }}</mat-icon>
+                    {{ bill.utilityTypeName }}
+                  </span>
+                  <span class="meter">{{ bill.meterNumber }}</span>
+                </div>
+                <div class="bill-dates">
+                  <span>Due: {{ bill.dueDate | date:'dd MMM yyyy' }}</span>
+                </div>
+              </div>
+              <div class="bill-amount">
+                <div class="amount-label">Amount</div>
+                <div class="amount">₹{{ bill.totalAmount | number:'1.2-2' }}</div>
+                <div class="outstanding" *ngIf="bill.outstandingAmount > 0">
+                  Outstanding: ₹{{ bill.outstandingAmount | number:'1.2-2' }}
+                </div>
+              </div>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+
+      <!-- Connections Overview -->
+      <mat-card class="content-card">
+        <mat-card-header>
+          <mat-card-title>
+            <mat-icon>power</mat-icon>
+            My Connections
+          </mat-card-title>
+          <button mat-button color="primary" routerLink="/consumer/connections">
+            View All
+            <mat-icon>arrow_forward</mat-icon>
+          </button>
+        </mat-card-header>
+        <mat-card-content>
+          <div *ngIf="connections.length === 0" class="empty-state">
+            <mat-icon>power_off</mat-icon>
+            <p>No connections found</p>
+          </div>
+          
+          <div class="connection-list" *ngIf="connections.length > 0">
+            <div class="connection-item" *ngFor="let connection of connections">>
+              <div class="connection-icon">
+                <mat-icon>{{ connection.utilityTypeName === 'Electricity' ? 'bolt' : 'water_drop' }}</mat-icon>
+              </div>
+              <div class="connection-info">
+                <div class="connection-name">{{ connection.utilityTypeName }}</div>
+                <div class="meter-number">{{ connection.meterNumber }}</div>
+                <div class="tariff-info">{{ connection.tariffName }}</div>
+              </div>
+              <mat-chip [class]="getConnectionStatusClass(connection.status)">
+                {{ connection.status }}
+              </mat-chip>
+            </div>
+          </div>
+        </mat-card-content>
+      </mat-card>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="quick-actions">
+      <h2>Quick Actions</h2>
+      <div class="actions-grid">
+        <button mat-raised-button color="primary" routerLink="/consumer/bills">
+          <mat-icon>receipt</mat-icon>
+          View My Bills
+        </button>
+        <button mat-raised-button color="accent" routerLink="/consumer/consumption">
+          <mat-icon>bar_chart</mat-icon>
+          Consumption Report
+        </button>
+        <button mat-raised-button routerLink="/consumer/profile">
+          <mat-icon>person</mat-icon>
+          Update Profile
+        </button>
+        <button mat-raised-button routerLink="/consumer/connections">
+          <mat-icon>power</mat-icon>
+          Manage Connections
+        </button>
+      </div>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,45 @@
+<h2 mat-dialog-title>Assign Role to User</h2>
+
+<mat-dialog-content>
+  <div class="user-details">
+    <p><strong>Name:</strong> {{user.firstName}} {{user.lastName}}</p>
+    <p><strong>Email:</strong> {{user.email}}</p>
+    <p><strong>Current Role:</strong> 
+  <mat-chip [class]="user.role && user.role > 0 ? 'current-role-chip' : 'pending-chip'">
+    {{getCurrentRoleName()}}  <!-- ⬅️ Use helper method -->
+  </mat-chip>
+</p>
+  </div>
+
+  <form [formGroup]="roleForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Select Role</mat-label>
+      <mat-select formControlName="role">
+        <mat-option *ngFor="let role of roles" [value]="role.value">
+          <div class="role-option">
+            <span class="role-name">{{role.name}}</span>
+            <small class="role-desc">{{role.description}}</small>
+          </div>
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>person</mat-icon>
+      <mat-error *ngIf="roleForm.get('role')?.hasError('required')">
+        Role is required
+      </mat-error>
+    </mat-form-field>
+
+    <div class="role-info" *ngIf="roleForm.get('role')?.value">
+      <mat-icon>info</mat-icon>
+      <p>{{getRoleDescription(roleForm.get('role')?.value)}}</p>
+    </div>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" 
+          [disabled]="!roleForm.valid">
+    <mat-icon>check</mat-icon>
+    Assign Role
+  </button>
+</mat-dialog-actions>

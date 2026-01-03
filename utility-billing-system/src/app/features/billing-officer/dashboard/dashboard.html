@@ -1,0 +1,57 @@
+<div class="dashboard-container">
+
+  <!-- Tabs -->
+  <div class="tab-row">
+    <button mat-raised-button class="tab-btn"
+            [class.active]="activeTab() === 'consumers'"
+            (click)="selectTab('consumers')">
+      <mat-icon>people</mat-icon>
+      Consumers
+    </button>
+
+    <button mat-raised-button class="tab-btn"
+            [class.active]="activeTab() === 'connections'"
+            (click)="selectTab('connections')">
+      <mat-icon>link</mat-icon>
+      Connections
+    </button>
+
+    <button mat-raised-button class="tab-btn"
+            [class.active]="activeTab() === 'billingcycles'"
+            (click)="selectTab('billingcycles')">
+      <mat-icon>event</mat-icon>
+      Billing Cycles
+    </button>
+  </div>
+
+  <mat-divider></mat-divider>
+
+  <!-- Table -->
+  <div class="table-container" *ngIf="data().length > 0; else selectTabMsg">
+    <table mat-table [dataSource]="data()">
+
+      <!-- Dynamic Columns -->
+      <ng-container *ngFor="let col of displayedColumns()"
+                    [matColumnDef]="col">
+
+        <th mat-header-cell *matHeaderCellDef>
+          {{ col | titlecase }}
+        </th>
+
+        <td mat-cell *matCellDef="let row">
+          {{ row[col] }}
+        </td>
+
+      </ng-container>
+
+      <tr mat-header-row *matHeaderRowDef="displayedColumns()"></tr>
+      <tr mat-row *matRowDef="let row; columns: displayedColumns();"></tr>
+
+    </table>
+  </div>
+
+  <ng-template #selectTabMsg>
+    <p class="no-data">Click a tab to load data.</p>
+  </ng-template>
+
+</div>

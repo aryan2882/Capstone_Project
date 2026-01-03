@@ -1,0 +1,336 @@
+<!-- reports.component.html -->
+<div class="reports-container">
+  <div class="page-header">
+    <div>
+      <h1><mat-icon>assessment</mat-icon> Reports & Analytics</h1>
+      <p>Generate comprehensive reports for revenue, collections, and consumption</p>
+    </div>
+  </div>
+
+  <div *ngIf="loading()" class="loading">
+    <mat-spinner></mat-spinner>
+  </div>
+
+  <div *ngIf="!loading()">
+    <mat-tab-group>
+      <!-- Revenue Report -->
+      <mat-tab label="Revenue Report">
+        <div class="tab-content">
+          <mat-card class="filter-card">
+            <h3>Select Date Range</h3>
+            <div class="date-range">
+              <mat-form-field appearance="outline">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="revenueStart" [(ngModel)]="revenueStartDate">
+                <mat-datepicker-toggle matSuffix [for]="revenueStart"></mat-datepicker-toggle>
+                <mat-datepicker #revenueStart></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="revenueEnd" [(ngModel)]="revenueEndDate">
+                <mat-datepicker-toggle matSuffix [for]="revenueEnd"></mat-datepicker-toggle>
+                <mat-datepicker #revenueEnd></mat-datepicker>
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" (click)="loadRevenueReport()" [disabled]="loadingReport()">
+                <mat-spinner *ngIf="loadingReport()" diameter="20"></mat-spinner>
+                <mat-icon *ngIf="!loadingReport()">search</mat-icon>
+                Generate
+              </button>
+            </div>
+          </mat-card>
+
+          <div *ngIf="revenueReport" class="report-content">
+            <div class="stats-grid">
+              <mat-card class="stat-card">
+                <mat-icon>receipt</mat-icon>
+                <div>
+                  <h3>₹{{revenueReport.totalBillAmount | number:'1.2-2'}}</h3>
+                  <p>Total Billed</p>
+                </div>
+              </mat-card>
+
+              <mat-card class="stat-card">
+                <mat-icon>payments</mat-icon>
+                <div>
+                  <h3>₹{{revenueReport.totalCollected | number:'1.2-2'}}</h3>
+                  <p>Total Collected</p>
+                </div>
+              </mat-card>
+
+              <mat-card class="stat-card">
+                <mat-icon>warning</mat-icon>
+                <div>
+                  <h3>₹{{revenueReport.totalOutstanding | number:'1.2-2'}}</h3>
+                  <p>Total Outstanding</p>
+                </div>
+              </mat-card>
+            </div>
+
+            <mat-card class="summary-card">
+              <h3>Summary</h3>
+              <div class="summary-grid">
+                <div class="summary-item">
+                  <span class="label">Period:</span>
+                  <span class="value">{{revenueReport.period}}</span>
+                </div>
+                <div class="summary-item">
+                  <span class="label">Total Bills:</span>
+                  <span class="value">{{revenueReport.totalBills}}</span>
+                </div>
+                <div class="summary-item">
+                  <span class="label">Paid Bills:</span>
+                  <span class="value paid">{{revenueReport.paidBills}}</span>
+                </div>
+                <div class="summary-item">
+                  <span class="label">Unpaid Bills:</span>
+                  <span class="value unpaid">{{revenueReport.unpaidBills}}</span>
+                </div>
+                <div class="summary-item">
+                  <span class="label">Collection Rate:</span>
+                  <span class="value">{{(revenueReport.totalCollected / revenueReport.totalBillAmount * 100) | number:'1.2-2'}}%</span>
+                </div>
+              </div>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Outstanding Report -->
+      <mat-tab label="Outstanding Report">
+        <div class="tab-content">
+          <mat-card class="filter-card">
+            <h3>Outstanding Bills by Consumer</h3>
+            <button mat-raised-button color="primary" (click)="loadOutstandingReport()" [disabled]="loadingReport()">
+              <mat-spinner *ngIf="loadingReport()" diameter="20"></mat-spinner>
+              <mat-icon *ngIf="!loadingReport()">search</mat-icon>
+              Load Report
+            </button>
+          </mat-card>
+
+          <div *ngIf="outstandingReport.length > 0" class="report-content">
+            <mat-card class="stat-card-full">
+              <mat-icon>warning</mat-icon>
+              <div>
+                <h3>₹{{getTotalOutstanding() | number:'1.2-2'}}</h3>
+                <p>Total Outstanding Amount</p>
+              </div>
+            </mat-card>
+
+            <mat-card class="table-card">
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th>Consumer Code</th>
+                    <th>Name</th>
+                    <th>Phone</th>
+                    <th>Unpaid Bills</th>
+                    <th>Total Outstanding</th>
+                    <th>Oldest Bill</th>
+                    <th>Days Overdue</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let consumer of outstandingReport" [class.overdue]="isOverdue(consumer.daysOverdue)">
+                    <td class="code">{{consumer.consumerCode}}</td>
+                    <td>{{consumer.consumerName}}</td>
+                    <td>{{consumer.phone}}</td>
+                    <td class="center">{{consumer.unpaidBillsCount}}</td>
+                    <td class="amount">₹{{consumer.totalOutstanding | number:'1.2-2'}}</td>
+                    <td>{{consumer.oldestBillDate | date:'dd MMM yyyy'}}</td>
+                    <td class="center" [class.overdue-text]="isOverdue(consumer.daysOverdue)">
+                      {{consumer.daysOverdue}} days
+                    </td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Consumption Report -->
+      <mat-tab label="Consumption Report">
+        <div class="tab-content">
+          <mat-card class="filter-card">
+            <h3>Select Billing Cycle</h3>
+            <div class="cycle-select">
+              <mat-form-field appearance="outline">
+                <mat-label>Billing Cycle</mat-label>
+                <mat-select [(ngModel)]="selectedBillingCycle">
+                  <mat-option *ngFor="let cycle of billingCycles" [value]="cycle.billingCycleId">
+                    {{cycle.cycleName}} ({{cycle.startDate | date:'dd MMM'}} - {{cycle.endDate | date:'dd MMM yyyy'}})
+                  </mat-option>
+                </mat-select>
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" (click)="loadConsumptionReport()" 
+                      [disabled]="!selectedBillingCycle || loadingReport()">
+                <mat-spinner *ngIf="loadingReport()" diameter="20"></mat-spinner>
+                <mat-icon *ngIf="!loadingReport()">search</mat-icon>
+                Generate
+              </button>
+            </div>
+          </mat-card>
+
+          <div *ngIf="consumptionReport.length > 0" class="report-content">
+            <div class="consumption-grid">
+              <mat-card *ngFor="let data of consumptionReport" class="consumption-card">
+                <div class="utility-header">
+                  <mat-icon>{{data.utilityType === 'Electricity' ? 'bolt' : 'water_drop'}}</mat-icon>
+                  <h3>{{data.utilityType}}</h3>
+                </div>
+                <div class="consumption-stats">
+                  <div class="stat-row">
+                    <span class="label">Total Consumption:</span>
+                    <span class="value">{{data.totalConsumption | number:'1.2-2'}} units</span>
+                  </div>
+                  <div class="stat-row">
+                    <span class="label">Average:</span>
+                    <span class="value">{{data.averageConsumption | number:'1.2-2'}} units</span>
+                  </div>
+                  <div class="stat-row">
+                    <span class="label">Highest:</span>
+                    <span class="value highlight">{{data.highestConsumption | number:'1.2-2'}} units</span>
+                  </div>
+                  <div class="stat-row">
+                    <span class="label">Lowest:</span>
+                    <span class="value">{{data.lowestConsumption | number:'1.2-2'}} units</span>
+                  </div>
+                  <div class="stat-row">
+                    <span class="label">Total Connections:</span>
+                    <span class="value">{{data.totalConnections}}</span>
+                  </div>
+                </div>
+              </mat-card>
+            </div>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Collection Report -->
+      <mat-tab label="Collection Report">
+        <div class="tab-content">
+          <mat-card class="filter-card">
+            <h3>Select Date Range</h3>
+            <div class="date-range">
+              <mat-form-field appearance="outline">
+                <mat-label>Start Date</mat-label>
+                <input matInput [matDatepicker]="collectionStart" [(ngModel)]="collectionStartDate">
+                <mat-datepicker-toggle matSuffix [for]="collectionStart"></mat-datepicker-toggle>
+                <mat-datepicker #collectionStart></mat-datepicker>
+              </mat-form-field>
+
+              <mat-form-field appearance="outline">
+                <mat-label>End Date</mat-label>
+                <input matInput [matDatepicker]="collectionEnd" [(ngModel)]="collectionEndDate">
+                <mat-datepicker-toggle matSuffix [for]="collectionEnd"></mat-datepicker-toggle>
+                <mat-datepicker #collectionEnd></mat-datepicker>
+              </mat-form-field>
+
+              <button mat-raised-button color="primary" (click)="loadCollectionReport()" [disabled]="loadingReport()">
+                <mat-spinner *ngIf="loadingReport()" diameter="20"></mat-spinner>
+                <mat-icon *ngIf="!loadingReport()">search</mat-icon>
+                Generate
+              </button>
+            </div>
+          </mat-card>
+
+          <div *ngIf="collectionReport.length > 0" class="report-content">
+            <div class="stats-grid">
+              <mat-card class="stat-card">
+                <mat-icon>payments</mat-icon>
+                <div>
+                  <h3>₹{{getTotalCollection() | number:'1.2-2'}}</h3>
+                  <p>Total Collections</p>
+                </div>
+              </mat-card>
+
+              <mat-card class="stat-card">
+                <mat-icon>receipt</mat-icon>
+                <div>
+                  <h3>{{getCollectionCount()}}</h3>
+                  <p>Total Transactions</p>
+                </div>
+              </mat-card>
+            </div>
+
+            <mat-card class="table-card">
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th>Date</th>
+                    <th>Payment Mode</th>
+                    <th>Amount</th>
+                    <th>Transactions</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let collection of collectionReport">
+                    <td>{{collection.date | date:'dd MMM yyyy'}}</td>
+                    <td>
+                      <span class="mode-badge" [class]="getPaymentModeClass(collection.paymentMode)">
+                        {{collection.paymentMode}}
+                      </span>
+                    </td>
+                    <td class="amount">₹{{collection.totalAmount | number:'1.2-2'}}</td>
+                    <td class="center">{{collection.transactionCount}}</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+
+      <!-- Consumer Summary -->
+      <mat-tab label="Consumer Summary">
+        <div class="tab-content">
+          <mat-card class="filter-card">
+            <h3>Consumer-wise Summary Report</h3>
+            <button mat-raised-button color="primary" (click)="loadConsumerSummary()" [disabled]="loadingReport()">
+              <mat-spinner *ngIf="loadingReport()" diameter="20"></mat-spinner>
+              <mat-icon *ngIf="!loadingReport()">search</mat-icon>
+              Load Report
+            </button>
+          </mat-card>
+
+          <div *ngIf="consumerSummary.length > 0" class="report-content">
+            <mat-card class="table-card">
+              <table class="report-table">
+                <thead>
+                  <tr>
+                    <th>Consumer Code</th>
+                    <th>Name</th>
+                    <th>Utility</th>
+                    <th>Total Bills</th>
+                    <th>Total Billed</th>
+                    <th>Total Paid</th>
+                    <th>Outstanding</th>
+                    <th>Avg Monthly</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr *ngFor="let summary of consumerSummary">
+                    <td class="code">{{summary.consumerCode}}</td>
+                    <td>{{summary.consumerName}}</td>
+                    <td>
+                      <mat-icon class="inline-icon">{{summary.utilityType === 'Electricity' ? 'bolt' : 'water_drop'}}</mat-icon>
+                      {{summary.utilityType}}
+                    </td>
+                    <td class="center">{{summary.totalBills}}</td>
+                    <td class="amount">₹{{summary.totalBilled | number:'1.2-2'}}</td>
+                    <td class="amount paid">₹{{summary.totalPaid | number:'1.2-2'}}</td>
+                    <td class="amount unpaid">₹{{summary.totalOutstanding | number:'1.2-2'}}</td>
+                    <td class="center">{{summary.averageMonthlyConsumption | number:'1.2-2'}} units</td>
+                  </tr>
+                </tbody>
+              </table>
+            </mat-card>
+          </div>
+        </div>
+      </mat-tab>
+    </mat-tab-group>
+  </div>
+</div>

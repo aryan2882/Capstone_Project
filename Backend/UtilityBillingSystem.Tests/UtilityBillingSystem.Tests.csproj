@@ -1,0 +1,40 @@
+﻿<Project Sdk="Microsoft.NET.Sdk">
+
+	<PropertyGroup>
+		<TargetFramework>net8.0</TargetFramework>
+		<ImplicitUsings>enable</ImplicitUsings>
+		<Nullable>enable</Nullable>
+		<IsPackable>false</IsPackable>
+	</PropertyGroup>
+
+	<ItemGroup>
+		<!-- Existing packages -->
+		<PackageReference Include="coverlet.collector" Version="6.0.2" />
+		<PackageReference Include="FluentAssertions" Version="8.0.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.InMemory" Version="8.0.0" />
+		<PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.12.0" />
+		<PackageReference Include="Moq" Version="4.20.72" />
+		<PackageReference Include="xunit" Version="2.9.2" />
+		<PackageReference Include="xunit.runner.visualstudio" Version="2.8.2" />
+
+		<!-- IMPORTANT: ASP.NET Core packages -->
+		<PackageReference Include="Microsoft.AspNetCore.Mvc" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.Testing" Version="8.0.0" />
+		<PackageReference Include="Microsoft.AspNetCore.TestHost" Version="8.0.0" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<Using Include="Xunit" />
+	</ItemGroup>
+
+	<ItemGroup>
+		<!-- Your domain + application -->
+		<ProjectReference Include="..\UtilityBillingSystem.Core\UtilityBillingSystem.Core.csproj" />
+		<ProjectReference Include="..\UtilityBillingSystem.Application\UtilityBillingSystem.Application.csproj" />
+		<ProjectReference Include="..\UtilityBillingSystem.Infrastructure\UtilityBillingSystem.Infrastructure.csproj" />
+
+		<!-- IMPORTANT: API reference (missing earlier) -->
+		<ProjectReference Include="..\UtilityBillingSystem.API\UtilityBillingSystem.API.csproj" />
+	</ItemGroup>
+
+</Project>

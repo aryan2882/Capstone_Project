@@ -1,0 +1,33 @@
+.user-details {
+  margin-bottom: 24px;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+
+  p {
+    margin: 8px 0;
+    font-size: 14px;
+
+    strong {
+      color: #555;
+    }
+  }
+
+  mat-chip {
+    margin-left: 8px;
+    font-size: 12px;
+  }
+
+  .pending-chip {
+    background-color: #9E9E9E;
+    color: white;
+  }
+}
+
+.full-width {
+  width: 100%;
+}
+
+mat-dialog-content {
+  min-width: 400px;
+}

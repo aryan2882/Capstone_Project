@@ -1,0 +1,157 @@
+<div class="users-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>User Management</h1>
+    <button mat-raised-button color="primary" (click)="loadUsers(filterValue)" [disabled]="loading">
+      <mat-icon>refresh</mat-icon>
+      Refresh
+    </button>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search Users</mat-label>
+          <input matInput (keyup)="searchUsers($event)" placeholder="Search by name, email, phone...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="chip-group">
+          <mat-chip 
+            [class.selected]="filterValue === 'pending'"
+            (click)="applyFilter('pending')">
+            Pending Approval
+          </mat-chip>
+          <mat-chip 
+            [class.selected]="filterValue === 'consumers'"
+            (click)="applyFilter('consumers')">
+            Consumers
+          </mat-chip>
+          <mat-chip 
+            [class.selected]="filterValue === 'staff'"
+            (click)="applyFilter('staff')">
+            Staff
+          </mat-chip>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Table -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="users-table">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let user"> {{getUserId(user)}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td mat-cell *matCellDef="let user">
+              <div class="user-info">
+                <strong>{{getFullName(user)}}</strong>
+                <small *ngIf="user.fatherName">Father: {{user.fatherName}}</small>
+                <small *ngIf="!user.fatherName" class="text-muted">Father: N/A</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Email Column -->
+          <ng-container matColumnDef="email">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Email </th>
+            <td mat-cell *matCellDef="let user"> {{user.email}} </td>
+          </ng-container>
+
+          <!-- Phone Column -->
+          <ng-container matColumnDef="phone">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Phone </th>
+            <td mat-cell *matCellDef="let user"> {{user.phone || 'N/A'}} </td>
+          </ng-container>
+
+          <!-- City Column -->
+          <ng-container matColumnDef="city">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> City </th>
+            <td mat-cell *matCellDef="let user"> {{user.city || 'N/A'}} </td>
+          </ng-container>
+
+          <!-- State Column -->
+          <ng-container matColumnDef="state">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> State </th>
+            <td mat-cell *matCellDef="let user"> {{user.state || 'N/A'}} </td>
+          </ng-container>
+
+          <!-- ID Proof Column -->
+          <ng-container matColumnDef="idProof">
+            <th mat-header-cell *matHeaderCellDef> ID Proof </th>
+            <td mat-cell *matCellDef="let user">
+              <div class="id-proof" *ngIf="user.idProofType && user.idProofNumber">
+                <small>{{user.idProofType}}</small>
+                <span>{{user.idProofNumber}}</span>
+              </div>
+              <span class="text-muted" *ngIf="!user.idProofType || !user.idProofNumber">N/A</span>
+            </td>
+          </ng-container>
+
+          <!-- Role Column -->
+          <ng-container matColumnDef="role">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Role </th>
+            <td mat-cell *matCellDef="let user">
+              <mat-chip [class]="getRoleBadgeClass(user.role || 0)" *ngIf="user.role && user.role > 0">
+                {{roleNames[user.role!] || 'Unknown'}}
+              </mat-chip>
+              <mat-chip class="badge-pending" *ngIf="!user.role || user.role === 0">
+                Pending
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let user">
+              <button mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openAssignRoleDialog(user)">
+                  <mat-icon>person_add</mat-icon>
+                  <span>Assign Role</span>
+                </button>
+                <button mat-menu-item (click)="deleteUser(user)" *ngIf="user.role !== 1">
+                  <mat-icon color="warn">delete</mat-icon>
+                  <span>Delete User</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- No Data Row -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="no-data">
+                <mat-icon>people_outline</mat-icon>
+                <p>No users found</p>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <mat-spinner *ngIf="loading" diameter="50" class="table-spinner"></mat-spinner>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[10, 25, 50, 100]" 
+                     showFirstLastButtons
+                     aria-label="Select page of users">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,320 @@
+/* ===========================
+   Container
+   =========================== */
+.form-container {
+  padding: 24px;
+  max-width: 1000px;
+  margin: 0 auto;
+  min-height: calc(100vh - 100px);
+  display: flex;
+  align-items: flex-start;
+}
+
+/* ===========================
+   Card Styling
+   =========================== */
+.form-card {
+  width: 100%;
+  border-radius: 12px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+  overflow: hidden;
+  padding: 0;
+}
+
+/* ===========================
+   Header Section
+   =========================== */
+.card-header {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+  padding: 32px;
+  color: white;
+}
+
+.header-content {
+  display: flex;
+  align-items: center;
+  gap: 16px;
+}
+
+.header-icon {
+  font-size: 48px;
+  width: 48px;
+  height: 48px;
+  color: white;
+}
+
+.page-title {
+  font-size: 28px;
+  font-weight: 600;
+  margin: 0 0 4px 0;
+  color: white;
+}
+
+.page-subtitle {
+  font-size: 14px;
+  margin: 0;
+  opacity: 0.9;
+  color: rgba(255, 255, 255, 0.9);
+}
+
+mat-divider {
+  margin: 0;
+  border-color: rgba(0, 0, 0, 0.06);
+}
+
+/* ===========================
+   Form Content
+   =========================== */
+.form-content {
+  padding: 40px 32px;
+}
+
+form {
+  display: flex;
+  flex-direction: column;
+  gap: 24px;
+}
+
+/* ===========================
+   Form Rows
+   =========================== */
+.form-row {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px;
+  width: 100%;
+
+  &.full-width-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* ===========================
+   Form Fields
+   =========================== */
+.form-field {
+  width: 100%;
+
+  ::ng-deep {
+    .mat-mdc-form-field-flex {
+      background: white;
+    }
+
+    .mat-mdc-text-field-wrapper {
+      padding: 0 16px;
+    }
+
+    .mat-mdc-form-field-infix {
+      padding: 16px 0;
+      min-height: 56px;
+    }
+
+    .mat-mdc-form-field-icon-prefix {
+      color: #667eea;
+      padding-right: 12px;
+      font-size: 20px;
+    }
+
+    input,
+    textarea,
+    .mat-mdc-select {
+      font-size: 15px;
+      color: #1e293b;
+    }
+
+    textarea {
+      resize: vertical;
+      font-family: inherit;
+    }
+
+    .mat-mdc-form-field-subscript-wrapper {
+      margin-top: 8px;
+    }
+
+    .mat-focused {
+      .mat-mdc-form-field-icon-prefix {
+        color: #667eea;
+      }
+    }
+  }
+}
+
+.unit-suffix {
+  color: #64748b;
+  font-size: 13px;
+  font-weight: 600;
+  padding-right: 8px;
+}
+
+/* ===========================
+   Connection Option Styling
+   =========================== */
+.connection-option {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 4px 0;
+}
+
+.consumer-name {
+  font-weight: 600;
+  color: #1e293b;
+  font-size: 14px;
+}
+
+.meter-number {
+  font-size: 12px;
+  color: #64748b;
+}
+
+/* ===========================
+   Action Buttons
+   =========================== */
+.form-actions {
+  display: flex;
+  justify-content: flex-end;
+  gap: 16px;
+  margin-top: 16px;
+  padding-top: 24px;
+  border-top: 1px solid #e2e8f0;
+}
+
+.cancel-btn,
+.submit-btn {
+  padding: 0 32px;
+  height: 48px;
+  font-size: 15px;
+  font-weight: 600;
+  border-radius: 8px;
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  transition: all 0.3s ease;
+
+  mat-icon {
+    font-size: 20px;
+    width: 20px;
+    height: 20px;
+  }
+}
+
+.cancel-btn {
+  color: #64748b;
+  border-color: #cbd5e1;
+
+  &:hover:not(:disabled) {
+    background: #f8fafc;
+    border-color: #94a3b8;
+  }
+}
+
+.submit-btn {
+  background: linear-gradient(135deg, #667eea 0%, #764ba2 100%) !important;
+  color: white !important;
+  box-shadow: 0 4px 12px rgba(102, 126, 234, 0.3);
+
+  &:hover:not(:disabled) {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 16px rgba(102, 126, 234, 0.4);
+  }
+
+  &:disabled {
+    opacity: 0.6;
+    cursor: not-allowed;
+    transform: none;
+    box-shadow: none;
+  }
+}
+
+/* ===========================
+   Error States
+   =========================== */
+::ng-deep {
+  mat-error {
+    font-size: 12px;
+    color: #ef4444;
+    margin-top: 4px;
+  }
+
+  .mat-mdc-form-field-error {
+    .mat-mdc-form-field-icon-prefix {
+      color: #ef4444;
+    }
+  }
+}
+
+/* ===========================
+   Responsive Design
+   =========================== */
+@media (max-width: 768px) {
+  .form-container {
+    padding: 16px;
+  }
+
+  .card-header {
+    padding: 24px 20px;
+  }
+
+  .header-content {
+    gap: 12px;
+  }
+
+  .header-icon {
+    font-size: 40px;
+    width: 40px;
+    height: 40px;
+  }
+
+  .page-title {
+    font-size: 22px;
+  }
+
+  .page-subtitle {
+    font-size: 13px;
+  }
+
+  .form-content {
+    padding: 24px 20px;
+  }
+
+  .form-row {
+    grid-template-columns: 1fr;
+    gap: 20px;
+  }
+
+  .form-actions {
+    flex-direction: column-reverse;
+    gap: 12px;
+
+    .cancel-btn,
+    .submit-btn {
+      width: 100%;
+      justify-content: center;
+    }
+  }
+}
+
+@media (max-width: 480px) {
+  .form-container {
+    padding: 12px;
+  }
+
+  .card-header {
+    padding: 20px 16px;
+  }
+
+  .page-title {
+    font-size: 20px;
+  }
+
+  .form-content {
+    padding: 20px 16px;
+  }
+
+  .cancel-btn,
+  .submit-btn {
+    padding: 0 24px;
+    height: 44px;
+    font-size: 14px;
+  }
+}

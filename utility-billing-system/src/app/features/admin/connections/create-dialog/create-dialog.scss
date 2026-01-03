@@ -1,0 +1,43 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.half-width {
+  width: calc(50% - 8px);
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+mat-dialog-content {
+  min-width: 600px;
+  max-height: 70vh;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.section-title {
+  color: #667eea;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #667eea;
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+
+  button {
+    mat-icon {
+      margin-right: 4px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}

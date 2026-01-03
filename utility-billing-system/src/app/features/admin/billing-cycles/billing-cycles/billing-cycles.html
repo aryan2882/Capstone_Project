@@ -1,0 +1,180 @@
+<div class="billing-cycles-container">
+  <!-- Header -->
+  <div class="header">
+    <div class="header-left">
+      <h1>Billing Cycles Management</h1>
+      <mat-chip *ngIf="currentCycle" class="current-cycle-chip">
+        <mat-icon>event_available</mat-icon>
+        Current: {{currentCycle.cycleName}}
+      </mat-chip>
+    </div>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Create Billing Cycle
+      </button>
+      <button mat-raised-button (click)="loadBillingCycles()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search Billing Cycles</mat-label>
+          <input matInput (keyup)="searchBillingCycles($event)" placeholder="Search by name...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="chip-group">
+          <mat-chip 
+            [class.selected]="filterValue === 'all'"
+            (click)="applyFilter('all')">
+            All Cycles
+          </mat-chip>
+          <mat-chip 
+            [class.selected]="filterValue === 'active'"
+            (click)="applyFilter('active')">
+            Active
+          </mat-chip>
+          <mat-chip 
+            [class.selected]="filterValue === 'closed'"
+            (click)="applyFilter('closed')">
+            Closed
+          </mat-chip>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Table -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="billing-cycles-table">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let cycle"> {{cycle.billingCycleId}} </td>
+          </ng-container>
+
+          <!-- Cycle Name Column -->
+          <ng-container matColumnDef="cycleName">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Cycle Name </th>
+            <td mat-cell *matCellDef="let cycle">
+              <div class="cycle-name">
+                <mat-icon class="cycle-icon">event</mat-icon>
+                <div class="cycle-details">
+                  <strong>{{cycle.cycleName}}</strong>
+                  <small>Created: {{formatDate(cycle.createdAt)}}</small>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Period Column -->
+          <ng-container matColumnDef="period">
+            <th mat-header-cell *matHeaderCellDef> Period </th>
+            <td mat-cell *matCellDef="let cycle">
+              <div class="period-info">
+                <div class="date-range">
+                  <mat-icon>date_range</mat-icon>
+                  <span>{{formatDate(cycle.startDate)}} - {{formatDate(cycle.endDate)}}</span>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Deadlines Column -->
+          <ng-container matColumnDef="deadlines">
+            <th mat-header-cell *matHeaderCellDef> Key Dates </th>
+            <td mat-cell *matCellDef="let cycle">
+              <div class="deadlines-info">
+                <div class="deadline-item" matTooltip="Meter Reading Deadline">
+                  <mat-icon>speed</mat-icon>
+                  <small>{{formatDate(cycle.meterReadingDeadline)}}</small>
+                </div>
+                <div class="deadline-item" matTooltip="Bill Generation Date">
+                  <mat-icon>receipt</mat-icon>
+                  <small>{{formatDate(cycle.billGenerationDate)}}</small>
+                </div>
+                <div class="deadline-item" matTooltip="Payment Due Date">
+                  <mat-icon>payment</mat-icon>
+                  <small>{{formatDate(cycle.dueDate)}}</small>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let cycle">
+              <mat-chip [class]="getStatusClass(cycle)">
+                <mat-icon *ngIf="isCurrentCycle(cycle)">radio_button_checked</mat-icon>
+                {{getStatusText(cycle)}}
+              </mat-chip>
+              <div class="status-info" *ngIf="!cycle.isClosed && isCurrentCycle(cycle)">
+                <small class="days-remaining" *ngIf="getDaysRemaining(cycle.dueDate) > 0">
+                  {{getDaysRemaining(cycle.dueDate)}} days until due
+                </small>
+                <small class="overdue" *ngIf="getDaysRemaining(cycle.dueDate) <= 0">
+                  Overdue
+                </small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let cycle">
+              <button mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item disabled>
+                  <mat-icon>visibility</mat-icon>
+                  <span>View Details</span>
+                </button>
+                <button mat-menu-item (click)="closeBillingCycle(cycle)" 
+                        *ngIf="!cycle.isClosed">
+                  <mat-icon color="warn">lock</mat-icon>
+                  <span>Close Cycle</span>
+                </button>
+                <button mat-menu-item disabled *ngIf="cycle.isClosed">
+                  <mat-icon>lock</mat-icon>
+                  <span>Closed on {{formatDate(cycle.closedAt!)}}</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- No Data Row -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="no-data">
+                <mat-icon>event_busy</mat-icon>
+                <p>No billing cycles found</p>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <mat-spinner *ngIf="loading" diameter="50" class="table-spinner"></mat-spinner>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[10, 25, 50]" 
+                     showFirstLastButtons
+                     aria-label="Select page of billing cycles">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

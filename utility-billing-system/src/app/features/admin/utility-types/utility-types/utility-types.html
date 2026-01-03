@@ -1,0 +1,146 @@
+<div class="utility-types-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Utility Types Management</h1>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Create Utility Type
+      </button>
+      <button mat-raised-button (click)="loadUtilityTypes()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search Utility Types</mat-label>
+          <input matInput (keyup)="searchUtilityTypes($event)" placeholder="Search by name, unit...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <div class="chip-group">
+          <mat-chip 
+            [class.selected]="filterValue === 'all'"
+            (click)="applyFilter('all')">
+            All Types
+          </mat-chip>
+          <mat-chip 
+            [class.selected]="filterValue === 'active'"
+            (click)="applyFilter('active')">
+            Active Only
+          </mat-chip>
+          <mat-chip 
+            [class.selected]="filterValue === 'inactive'"
+            (click)="applyFilter('inactive')">
+            Inactive
+          </mat-chip>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Table -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="utility-types-table">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let type"> {{type.utilityTypeId}} </td>
+          </ng-container>
+
+          <!-- Name Column -->
+          <ng-container matColumnDef="name">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Name </th>
+            <td mat-cell *matCellDef="let type">
+              <div class="name-cell">
+                <mat-icon class="type-icon">bolt</mat-icon>
+                <strong>{{type.name}}</strong>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Unit of Measurement Column -->
+          <ng-container matColumnDef="unitOfMeasurement">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Unit </th>
+            <td mat-cell *matCellDef="let type">
+              <mat-chip class="unit-chip">{{type.unitOfMeasurement}}</mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Description Column -->
+          <ng-container matColumnDef="description">
+            <th mat-header-cell *matHeaderCellDef> Description </th>
+            <td mat-cell *matCellDef="let type"> {{type.description}} </td>
+          </ng-container>
+
+          <!-- Base Rate Column -->
+          <ng-container matColumnDef="baseRate">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Base Rate </th>
+            <td mat-cell *matCellDef="let type">
+              <span class="rate-value">₹{{type.baseRate | number:'1.2-2'}}</span>
+              <small class="rate-unit">per {{type.unitOfMeasurement}}</small>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let type">
+              <mat-chip [class]="getStatusClass(type.isActive)">
+                {{type.isActive ? 'Active' : 'Inactive'}}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let type">
+              <button mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openEditDialog(type)">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button mat-menu-item (click)="deactivateUtilityType(type)" *ngIf="type.isActive">
+                  <mat-icon color="warn">block</mat-icon>
+                  <span>Deactivate</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- No Data Row -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="no-data">
+                <mat-icon>category</mat-icon>
+                <p>No utility types found</p>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <mat-spinner *ngIf="loading" diameter="50" class="table-spinner"></mat-spinner>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[10, 25, 50]" 
+                     showFirstLastButtons
+                     aria-label="Select page of utility types">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

@@ -1,0 +1,94 @@
+<h2 mat-dialog-title>Create New Connection</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="connectionForm">
+    <!-- Consumer Selection -->
+    <h3 class="section-title">Consumer Details</h3>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Select Consumer</mat-label>
+      <mat-select formControlName="consumerId">
+        <mat-option *ngFor="let consumer of consumers" 
+                    [value]="consumer.userId || consumer.consumerId">
+          {{getConsumerDisplay(consumer)}}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>person</mat-icon>
+      <mat-error>Consumer is required</mat-error>
+    </mat-form-field>
+
+    <!-- Utility & Tariff -->
+    <h3 class="section-title">Utility & Tariff Configuration</h3>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Utility Type</mat-label>
+      <mat-select formControlName="utilityTypeId">
+        <mat-option *ngFor="let type of utilityTypes" [value]="type.utilityTypeId">
+          {{type.name}}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>category</mat-icon>
+      <mat-error>Utility type is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Tariff Plan</mat-label>
+      <mat-select formControlName="tariffId">
+        <mat-option *ngFor="let tariff of filteredTariffs" [value]="tariff.tariffId">
+          {{tariff.planName}}
+        </mat-option>
+      </mat-select>
+      <mat-icon matPrefix>description</mat-icon>
+      <mat-hint *ngIf="!connectionForm.get('utilityTypeId')?.value">
+        Select utility type first
+      </mat-hint>
+      <mat-hint *ngIf="connectionForm.get('utilityTypeId')?.value && filteredTariffs.length === 0">
+        No tariffs available for selected utility type
+      </mat-hint>
+      <mat-error>Tariff plan is required</mat-error>
+    </mat-form-field>
+
+    <!-- Connection Details -->
+    <h3 class="section-title">Connection Details</h3>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Meter Number</mat-label>
+      <input matInput formControlName="meterNumber" placeholder="e.g., MTR-2025-001">
+      <mat-icon matPrefix>speed</mat-icon>
+      <mat-error>Meter number is required (min 5 characters)</mat-error>
+    </mat-form-field>
+
+    <div class="form-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Connection Load (kW)</mat-label>
+        <input matInput type="number" formControlName="connectionLoad" step="0.1">
+        <mat-icon matPrefix>flash_on</mat-icon>
+        <mat-error>Connection load is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Initial Reading</mat-label>
+        <input matInput type="number" formControlName="initialReading" step="1">
+        <mat-icon matPrefix>analytics</mat-icon>
+        <mat-error>Initial reading is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Activation Date</mat-label>
+      <input matInput [matDatepicker]="picker" formControlName="activationDate" readonly>
+      <mat-datepicker-toggle matIconSuffix [for]="picker"></mat-datepicker-toggle>
+      <mat-datepicker #picker></mat-datepicker>
+      <mat-error>Activation date is required</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" 
+          [disabled]="!connectionForm.valid">
+    <mat-icon>add</mat-icon>
+    Create Connection
+  </button>
+</mat-dialog-actions>

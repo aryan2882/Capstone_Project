@@ -1,0 +1,190 @@
+<div class="connections-container">
+  <!-- Header -->
+  <div class="header">
+    <h1>Connection Management</h1>
+    <div class="header-actions">
+      <button mat-raised-button color="primary" (click)="openCreateDialog()">
+        <mat-icon>add</mat-icon>
+        Create Connection
+      </button>
+      <button mat-raised-button (click)="loadConnections()" [disabled]="loading">
+        <mat-icon>refresh</mat-icon>
+        Refresh
+      </button>
+    </div>
+  </div>
+
+  <!-- Filters -->
+  <mat-card class="filter-card">
+    <mat-card-content>
+      <div class="filters">
+        <mat-form-field appearance="outline" class="search-field">
+          <mat-label>Search Connections</mat-label>
+          <input matInput (keyup)="searchConnections($event)" 
+                 placeholder="Search by meter number, consumer...">
+          <mat-icon matPrefix>search</mat-icon>
+        </mat-form-field>
+
+        <mat-form-field appearance="outline" class="consumer-select">
+          <mat-label>Filter by Consumer</mat-label>
+          <mat-select [(ngModel)]="selectedConsumer" (selectionChange)="onConsumerChange()">
+            <mat-option [value]="null">All Consumers</mat-option>
+            <mat-option *ngFor="let consumer of consumers" 
+                        [value]="consumer.userId || consumer.consumerId">
+              {{consumer.firstName}} {{consumer.lastName}}
+            </mat-option>
+          </mat-select>
+          <mat-icon matPrefix>person</mat-icon>
+        </mat-form-field>
+
+        <div class="chip-group">
+          <mat-chip 
+            [class.selected]="filterValue === 'all'"
+            (click)="applyFilter('all')">
+            All
+          </mat-chip>
+          <mat-chip 
+            [class.selected]="filterValue === 'active'"
+            (click)="applyFilter('active')">
+            Active
+          </mat-chip>
+          <mat-chip 
+            [class.selected]="filterValue === 'disconnected'"
+            (click)="applyFilter('disconnected')">
+            Disconnected
+          </mat-chip>
+        </div>
+      </div>
+    </mat-card-content>
+  </mat-card>
+
+  <!-- Table -->
+  <mat-card class="table-card">
+    <mat-card-content>
+      <div class="table-container">
+        <table mat-table [dataSource]="dataSource" matSort class="connections-table">
+          <!-- ID Column -->
+          <ng-container matColumnDef="id">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> ID </th>
+            <td mat-cell *matCellDef="let conn"> {{conn.connectionId}} </td>
+          </ng-container>
+
+          <!-- Consumer Column -->
+          <ng-container matColumnDef="consumer">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Consumer </th>
+            <td mat-cell *matCellDef="let conn">
+              <div class="consumer-cell">
+                <mat-icon class="consumer-icon">person</mat-icon>
+                <div class="consumer-details">
+                  <strong>{{conn.consumerName || getConsumerName(conn.consumerId)}}</strong>
+                  <small>ID: {{conn.consumerId}}</small>
+                </div>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Utility Type Column -->
+          <ng-container matColumnDef="utilityType">
+            <th mat-header-cell *matHeaderCellDef> Utility Type </th>
+            <td mat-cell *matCellDef="let conn">
+              <mat-chip class="utility-chip">
+                {{conn.utilityTypeName || 'N/A'}}
+              </mat-chip>
+            </td>
+          </ng-container>
+
+          <!-- Meter Number Column -->
+          <ng-container matColumnDef="meterNumber">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Meter Number </th>
+            <td mat-cell *matCellDef="let conn">
+              <div class="meter-info">
+                <mat-icon>speed</mat-icon>
+                <span>{{conn.meterNumber}}</span>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Connection Load Column -->
+          <ng-container matColumnDef="connectionLoad">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Load </th>
+            <td mat-cell *matCellDef="let conn">
+              <div class="load-info">
+                <span class="load-value">{{conn.connectionLoad}}</span>
+                <small>kW</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Tariff Column -->
+          <ng-container matColumnDef="tariff">
+            <th mat-header-cell *matHeaderCellDef> Tariff Plan </th>
+            <td mat-cell *matCellDef="let conn">
+              <div class="tariff-info">
+                <small>{{conn.tariffName || 'Tariff #' + conn.tariffId}}</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Status Column -->
+          <ng-container matColumnDef="status">
+            <th mat-header-cell *matHeaderCellDef mat-sort-header> Status </th>
+            <td mat-cell *matCellDef="let conn">
+              <mat-chip [class]="getStatusClass(conn)">
+                <mat-icon *ngIf="conn.status === 'Active'">power</mat-icon>
+                <mat-icon *ngIf="conn.status === 'Disconnected' && conn.disconnectionDate">power_off</mat-icon>
+                {{getStatusText(conn)}}
+              </mat-chip>
+              <div class="status-detail" *ngIf="!conn.isActive && conn.disconnectionDate">
+                <small>Disconnected: {{formatDate(conn.disconnectionDate)}}</small>
+              </div>
+            </td>
+          </ng-container>
+
+          <!-- Actions Column -->
+          <ng-container matColumnDef="actions">
+            <th mat-header-cell *matHeaderCellDef> Actions </th>
+            <td mat-cell *matCellDef="let conn">
+              <button mat-icon-button [matMenuTriggerFor]="menu" color="primary">
+                <mat-icon>more_vert</mat-icon>
+              </button>
+              <mat-menu #menu="matMenu">
+                <button mat-menu-item (click)="openViewDialog(conn)">
+                  <mat-icon>visibility</mat-icon>
+                  <span>View Details</span>
+                </button>
+                <button mat-menu-item (click)="openEditDialog(conn)" *ngIf="conn.status==='Active'">
+                  <mat-icon>edit</mat-icon>
+                  <span>Edit</span>
+                </button>
+                <button mat-menu-item (click)="openDisconnectDialog(conn)" *ngIf="conn.status==='Active'">
+                  <mat-icon color="warn">power_off</mat-icon>
+                  <span>Disconnect</span>
+                </button>
+              </mat-menu>
+            </td>
+          </ng-container>
+
+          <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+          <tr mat-row *matRowDef="let row; columns: displayedColumns;"></tr>
+
+          <!-- No Data Row -->
+          <tr class="mat-row" *matNoDataRow>
+            <td class="mat-cell" [attr.colspan]="displayedColumns.length">
+              <div class="no-data">
+                <mat-icon>power</mat-icon>
+                <p>No connections found</p>
+              </div>
+            </td>
+          </tr>
+        </table>
+
+        <mat-spinner *ngIf="loading" diameter="50" class="table-spinner"></mat-spinner>
+      </div>
+
+      <mat-paginator [pageSizeOptions]="[10, 25, 50]" 
+                     showFirstLastButtons
+                     aria-label="Select page of connections">
+      </mat-paginator>
+    </mat-card-content>
+  </mat-card>
+</div>

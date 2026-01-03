@@ -1,0 +1,85 @@
+<h2 mat-dialog-title>Create New Billing Cycle</h2>
+
+<mat-dialog-content>
+  <form [formGroup]="billingCycleForm">
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Cycle Name</mat-label>
+      <input matInput formControlName="cycleName" placeholder="e.g., January 2025">
+      <mat-icon matPrefix>event</mat-icon>
+      <mat-error *ngIf="billingCycleForm.get('cycleName')?.hasError('required')">
+        Cycle name is required
+      </mat-error>
+    </mat-form-field>
+
+    <div class="date-row">
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>Start Date</mat-label>
+        <input matInput [matDatepicker]="startPicker" formControlName="startDate" readonly
+               (dateChange)="autoFillDates()">
+        <mat-datepicker-toggle matIconSuffix [for]="startPicker"></mat-datepicker-toggle>
+        <mat-datepicker #startPicker></mat-datepicker>
+        <mat-error>Start date is required</mat-error>
+      </mat-form-field>
+
+      <mat-form-field appearance="outline" class="half-width">
+        <mat-label>End Date</mat-label>
+        <input matInput [matDatepicker]="endPicker" formControlName="endDate">
+        <mat-datepicker-toggle matSuffix [for]="endPicker"></mat-datepicker-toggle>
+        <mat-datepicker #endPicker></mat-datepicker>
+        <mat-error>End date is required</mat-error>
+      </mat-form-field>
+    </div>
+
+    <div class="info-section">
+      <mat-icon>info</mat-icon>
+      <small>Deadlines and dates will be auto-filled based on start date. You can modify them.</small>
+    </div>
+
+    <h3 class="section-title">Deadlines & Schedules</h3>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Meter Reading Deadline</mat-label>
+      <input matInput [matDatepicker]="meterPicker" formControlName="meterReadingDeadline">
+      <mat-datepicker-toggle matSuffix [for]="meterPicker"></mat-datepicker-toggle>
+      <mat-datepicker #meterPicker></mat-datepicker>
+      <mat-hint>Last date for meter reading entry</mat-hint>
+      <mat-error>Meter reading deadline is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Bill Generation Date</mat-label>
+      <input matInput [matDatepicker]="billPicker" formControlName="billGenerationDate">
+      <mat-datepicker-toggle matSuffix [for]="billPicker"></mat-datepicker-toggle>
+      <mat-datepicker #billPicker></mat-datepicker>
+      <mat-hint>Date when bills will be generated</mat-hint>
+      <mat-error>Bill generation date is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Payment Due Date</mat-label>
+      <input matInput [matDatepicker]="duePicker" formControlName="dueDate">
+      <mat-datepicker-toggle matSuffix [for]="duePicker"></mat-datepicker-toggle>
+      <mat-datepicker #duePicker></mat-datepicker>
+      <mat-hint>Last date for payment without penalty</mat-hint>
+      <mat-error>Due date is required</mat-error>
+    </mat-form-field>
+
+    <mat-form-field appearance="outline" class="full-width">
+      <mat-label>Penalty Start Date</mat-label>
+      <input matInput [matDatepicker]="penaltyPicker" formControlName="penaltyStartDate">
+      <mat-datepicker-toggle matSuffix [for]="penaltyPicker"></mat-datepicker-toggle>
+      <mat-datepicker #penaltyPicker></mat-datepicker>
+      <mat-hint>Date when penalty charges begin</mat-hint>
+      <mat-error>Penalty start date is required</mat-error>
+    </mat-form-field>
+  </form>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-button (click)="onCancel()">Cancel</button>
+  <button mat-raised-button color="primary" (click)="onSubmit()" 
+          [disabled]="!billingCycleForm.valid">
+    <mat-icon>add</mat-icon>
+    Create Billing Cycle
+  </button>
+</mat-dialog-actions>

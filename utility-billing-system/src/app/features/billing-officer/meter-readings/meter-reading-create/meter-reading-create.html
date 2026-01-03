@@ -1,0 +1,103 @@
+<div class="form-container">
+  <mat-card class="form-card">
+    <!-- Header Section -->
+    <div class="card-header">
+      <div class="header-content">
+        <mat-icon class="header-icon">speed</mat-icon>
+        <div>
+          <h1 class="page-title">Add Meter Reading</h1>
+          <p class="page-subtitle">Record a new meter reading for billing</p>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Form Section -->
+    <div class="form-content">
+      <form [formGroup]="form" (ngSubmit)="submit()">
+        
+        <!-- Connection and Cycle Row -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Connection</mat-label>
+            <mat-select formControlName="connectionId" required>
+              <mat-option *ngFor="let c of connections" [value]="c.connectionId">
+                <div class="connection-option">
+                  <span class="consumer-name">{{c.consumerName}}</span>
+                  <span class="meter-number">Meter: {{c.meterNumber}}</span>
+                </div>
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>account_circle</mat-icon>
+            <mat-error *ngIf="form.get('connectionId')?.hasError('required')">
+              Connection is required
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Billing Cycle</mat-label>
+            <mat-select formControlName="billingCycleId" required>
+              <mat-option *ngFor="let c of billingCycles" [value]="c.billingCycleId">
+                {{c.cycleName}}
+              </mat-option>
+            </mat-select>
+            <mat-icon matPrefix>calendar_today</mat-icon>
+            <mat-error *ngIf="form.get('billingCycleId')?.hasError('required')">
+              Billing cycle is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Reading and Date Row -->
+        <div class="form-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Current Reading</mat-label>
+            <input matInput type="number" formControlName="currentReading" required>
+            <mat-icon matPrefix>speed</mat-icon>
+            <span matSuffix class="unit-suffix">kWh</span>
+            <mat-error *ngIf="form.get('currentReading')?.hasError('required')">
+              Reading is required
+            </mat-error>
+            <mat-error *ngIf="form.get('currentReading')?.hasError('min')">
+              Reading must be positive
+            </mat-error>
+          </mat-form-field>
+
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Reading Date</mat-label>
+            <input matInput [matDatepicker]="picker" formControlName="readingDate" required>
+            <mat-icon matPrefix>event</mat-icon>
+            <mat-datepicker-toggle [for]="picker" matSuffix></mat-datepicker-toggle>
+            <mat-datepicker #picker></mat-datepicker>
+            <mat-error *ngIf="form.get('readingDate')?.hasError('required')">
+              Date is required
+            </mat-error>
+          </mat-form-field>
+        </div>
+
+        <!-- Remarks Row (Full Width) -->
+        <div class="form-row full-width-row">
+          <mat-form-field appearance="outline" class="form-field">
+            <mat-label>Remarks (Optional)</mat-label>
+            <textarea matInput formControlName="remarks" rows="4" placeholder="Add any additional notes or observations..."></textarea>
+            <mat-icon matPrefix>notes</mat-icon>
+          </mat-form-field>
+        </div>
+
+        <!-- Action Buttons -->
+        <div class="form-actions">
+          <!-- <button mat-stroked-button type="button" class="cancel-btn" (click)="cancel()">
+            <mat-icon>close</mat-icon>
+            Cancel
+          </button> -->
+          <button mat-raised-button color="primary" type="submit" class="submit-btn" [disabled]="form.invalid">
+            <mat-icon>save</mat-icon>
+            Submit Reading
+          </button>
+        </div>
+
+      </form>
+    </div>
+  </mat-card>
+</div>

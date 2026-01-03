@@ -1,0 +1,146 @@
+<mat-toolbar color="primary" class="navbar">
+  <div class="navbar-content">
+    <div class="navbar-left">
+      <span class="brand">Utility Billing System</span>
+    </div>
+
+    <div class="navbar-center">
+      <!-- Admin Menu - Use direct role check -->
+      <ng-container *ngIf="userRole === 1">
+        <button mat-button routerLink="/admin/users" routerLinkActive="active">
+          <mat-icon>people</mat-icon>
+          Users
+        </button>
+        <button mat-button routerLink="/admin/billing-cycles" routerLinkActive="active">
+          <mat-icon>event</mat-icon>
+          Billing Cycles
+        </button>
+        <button mat-button routerLink="/admin/utility-types" routerLinkActive="active">
+          <mat-icon>category</mat-icon>
+          Utility Types
+        </button>
+        <button mat-button routerLink="/admin/tariffs" routerLinkActive="active">
+          <mat-icon>attach_money</mat-icon>
+          Tariffs
+        </button>
+        <button mat-button routerLink="/admin/connections" routerLinkActive="active">
+          <mat-icon>power</mat-icon>
+          Connections
+        </button>
+      </ng-container>
+
+      <!-- Billing Officer Menu -->
+      <ng-container *ngIf="userRole === 2">
+        <button mat-button routerLink="/billing-officer/meter-readings/dashboard" routerLinkActive="active">
+          <mat-icon>dashboard</mat-icon>
+          Dashboard
+        </button>
+        <button mat-button routerLink="/billing-officer/meter-readings" routerLinkActive="active">
+          <mat-icon>speed</mat-icon>
+          Meter Readings
+        </button>
+        <button mat-button routerLink="/billing-officer/meter-readings/bills" routerLinkActive="active">
+          <mat-icon>receipt</mat-icon>
+          Bills
+        </button>
+      </ng-container>
+
+      
+      <!-- Account Officer Menu -->
+      <ng-container *ngIf="userRole === 3">
+        <button mat-button routerLink="/account-officer/dashboard" routerLinkActive="active">
+          <mat-icon>dashboard</mat-icon>
+          Dashboard
+        </button>
+        <button mat-button routerLink="/account-officer/consumers" routerLinkActive="active">
+          <mat-icon>people</mat-icon>
+          Consumers
+        </button>
+        <button mat-button routerLink="/account-officer/bills" routerLinkActive="active">
+          <mat-icon>receipt</mat-icon>
+          Bills
+        </button>
+        <button mat-button routerLink="/account-officer/outstanding" routerLinkActive="active">
+          <mat-icon>warning</mat-icon>
+          Outstanding
+        </button>
+        <button mat-button routerLink="/account-officer/payments" routerLinkActive="active">
+          <mat-icon>payments</mat-icon>
+          Payments
+        </button>
+        <button mat-button routerLink="/account-officer/make-payment" routerLinkActive="active">
+          <mat-icon>add_circle</mat-icon>
+          Record Payment
+        </button>
+        <button mat-button routerLink="/account-officer/reports" routerLinkActive="active">
+          <mat-icon>assessment</mat-icon>
+          Reports
+        </button>
+      </ng-container>
+
+       <ng-container *ngIf="userRole === 4">
+        <button mat-button routerLink="/consumer/dashboard" routerLinkActive="active">
+          <mat-icon>dashboard</mat-icon>
+          Dashboard
+        </button>
+        <button mat-button routerLink="/consumer/bills" routerLinkActive="active">
+          <mat-icon>receipt</mat-icon>
+          My Bills
+        </button>
+         <button mat-button routerLink="/consumer/make-payment" routerLinkActive="active">
+          <mat-icon>payment</mat-icon>
+          Make Payment
+        </button>
+        <button mat-button routerLink="/consumer/payment-history" routerLinkActive="active">
+          <mat-icon>history</mat-icon>
+          Payment History
+        </button>
+        <button mat-button routerLink="/consumer/profile" routerLinkActive="active">
+          <mat-icon>person</mat-icon>
+          My Profile
+        </button>
+        <button mat-button routerLink="/consumer/connections" routerLinkActive="active">
+          <mat-icon>power</mat-icon>
+          Connections
+        </button>
+        <button mat-button routerLink="/consumer/consumption" routerLinkActive="active">
+          <mat-icon>bar_chart</mat-icon>
+          Consumption
+        </button>
+        <!-- Uncomment when payment is ready -->
+        <!-- <button mat-button routerLink="/consumer/payments" routerLinkActive="active">
+          <mat-icon>payment</mat-icon>
+          Payments
+        </button> -->
+      </ng-container>
+    </div>
+
+    <div class="navbar-right">
+      <button mat-button [matMenuTriggerFor]="userMenu" class="user-menu-btn">
+        <mat-icon>account_circle</mat-icon>
+        <span class="user-name">{{currentUser?.firstName}} {{currentUser?.lastName}}</span>
+        <mat-icon>arrow_drop_down</mat-icon>
+      </button>
+      <mat-menu #userMenu="matMenu">
+        <div class="user-info">
+          <p class="user-email">{{currentUser?.email}}</p>
+          <mat-chip class="role-chip">{{getRoleName()}}</mat-chip>
+        </div>
+        <mat-divider></mat-divider>
+        <button mat-menu-item>
+          <mat-icon>person</mat-icon>
+          <span>Profile</span>
+        </button>
+        <button mat-menu-item>
+          <mat-icon>settings</mat-icon>
+          <span>Settings</span>
+        </button>
+        <mat-divider></mat-divider>
+        <button mat-menu-item (click)="logout()">
+          <mat-icon>logout</mat-icon>
+          <span>Logout</span>
+        </button>
+      </mat-menu>
+    </div>
+  </div>
+</mat-toolbar>

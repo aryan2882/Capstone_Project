@@ -1,0 +1,135 @@
+mat-dialog-content {
+  min-width: 600px;
+  max-height: 70vh;
+  padding: 24px;
+}
+
+h2 {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  color: #333;
+
+  mat-icon {
+    color: #667eea;
+  }
+}
+
+.connection-details {
+  .detail-section {
+    margin: 20px 0;
+
+    h3 {
+      color: #667eea;
+      font-size: 16px;
+      font-weight: 500;
+      margin-bottom: 16px;
+    }
+
+    .detail-grid {
+      display: grid;
+      grid-template-columns: repeat(2, 1fr);
+      gap: 16px;
+
+      .detail-item {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        label {
+          font-size: 12px;
+          color: #666;
+          font-weight: 500;
+        }
+
+        span {
+          font-size: 15px;
+          color: #333;
+        }
+
+        .meter-number {
+          font-family: 'Courier New', monospace;
+          font-weight: 600;
+          color: #667eea;
+        }
+
+        .disconnected {
+          color: #d32f2f;
+          font-weight: 500;
+        }
+      }
+    }
+
+    .disconnection-reason {
+      display: flex;
+      align-items: start;
+      gap: 12px;
+      padding: 16px;
+      background-color: #ffebee;
+      border-radius: 8px;
+      border-left: 4px solid #f44336;
+
+      mat-icon {
+        color: #d32f2f;
+        font-size: 20px;
+        width: 20px;
+        height: 20px;
+      }
+
+      p {
+        margin: 0;
+        color: #c62828;
+        font-size: 14px;
+        line-height: 1.5;
+      }
+    }
+  }
+
+  .status-section {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    padding: 20px;
+    background-color: #f5f5f5;
+    border-radius: 8px;
+    margin-top: 24px;
+
+    mat-icon {
+      font-size: 32px;
+      width: 32px;
+      height: 32px;
+
+      &.active {
+        color: #4CAF50;
+      }
+
+      &.inactive {
+        color: #F44336;
+      }
+    }
+
+    span {
+      font-size: 18px;
+      font-weight: 600;
+
+      &.active {
+        color: #2e7d32;
+      }
+
+      &.inactive {
+        color: #c62828;
+      }
+    }
+  }
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+
+  button {
+    mat-icon {
+      margin-right: 4px;
+    }
+  }
+}

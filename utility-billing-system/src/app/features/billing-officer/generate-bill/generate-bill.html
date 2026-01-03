@@ -1,0 +1,128 @@
+<!-- src/app/components/bills/generate-bill/generate-bill.component.html -->
+<div class="generate-bill-container">
+  @if (loadingCycles()) {
+    <div class="loading">Loading billing cycles...</div>
+  }
+
+  @if (!loadingCycles()) {
+    <div class="form-container">
+      <!-- Step 1: Select Billing Cycle -->
+      <div class="form-group">
+        <label for="billingCycle">Step 1: Select Billing Cycle:</label>
+        <select
+          id="billingCycle"
+          [value]="selectedBillingCycleId()"
+          (change)="onBillingCycleChange($any($event.target).value ? +$any($event.target).value : null)"
+          class="form-select"
+        >
+          <option [value]="null">-- Select a billing cycle --</option>
+          @for (cycle of billingCycles(); track cycle.billingCycleId) {
+            <option [value]="cycle.billingCycleId">
+              {{ cycle.cycleName }} ({{ formatDate(cycle.startDate) }} - {{ formatDate(cycle.endDate) }})
+            </option>
+          }
+        </select>
+      </div>
+
+      <!-- Step 2: Select Meter Reading -->
+      @if (selectedBillingCycleId()) {
+        <div class="form-group">
+          <label for="meterReading">Step 2: Select Meter Reading:</label>
+          
+          @if (loadingReadings()) {
+            <div class="loading-small">Loading meter readings...</div>
+          }
+          
+          @if (!loadingReadings() && meterReadings().length === 0) {
+            <div class="no-data-small">
+              No unbilled meter readings available for this cycle. All readings have already been billed.
+            </div>
+          }
+
+          @if (!loadingReadings() && meterReadings().length > 0) {
+            <select
+              id="meterReading"
+              [value]="selectedMeterReadingId()"
+              (change)="onMeterReadingChange($any($event.target).value ? +$any($event.target).value : null)"
+              class="form-select"
+            >
+              <option [value]="null">-- Select a meter reading --</option>
+              @for (reading of meterReadings(); track reading.meterReadingId) {
+                <option [value]="reading.meterReadingId">
+                  {{ reading.meterNumber }} - {{ reading.consumerName }} 
+                  (Reading: {{ reading.currentReading }})
+                </option>
+              }
+            </select>
+          }
+        </div>
+      }
+
+      <!-- Selected Reading Details -->
+      @if (selectedReading()) {
+        <div class="reading-details">
+          <h4>Selected Reading Details:</h4>
+          <div class="details-card">
+            <div class="detail-row">
+              <span class="label">Consumer:</span>
+              <span class="value">{{ selectedReading()?.consumerName }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Meter Number:</span>
+              <span class="value">{{ selectedReading()?.meterNumber }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Cycle:</span>
+              <span class="value">{{ selectedReading()?.cycleName }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Previous Reading:</span>
+              <span class="value">{{ selectedReading()?.previousReading }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Current Reading:</span>
+              <span class="value">{{ selectedReading()?.currentReading }}</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Consumption:</span>
+              <span class="value highlight">{{ selectedReading()?.consumption }} units</span>
+            </div>
+            <div class="detail-row">
+              <span class="label">Reading Date:</span>
+              <span class="value">{{ formatDate(selectedReading()?.readingDate || '') }}</span>
+            </div>
+            @if (selectedReading()?.remarks) {
+              <div class="detail-row">
+                <span class="label">Remarks:</span>
+                <span class="value">{{ selectedReading()?.remarks }}</span>
+              </div>
+            }
+          </div>
+        </div>
+      }
+
+      <!-- Generate Button -->
+      @if (selectedBillingCycleId() && meterReadings().length > 0) {
+        <button 
+          class="btn btn-primary"
+          (click)="generateBill()"
+          [disabled]="loading() || !selectedMeterReadingId()"
+        >
+          {{ loading() ? 'Generating...' : 'Generate Bill' }}
+        </button>
+      }
+    </div>
+  }
+
+  @if (successMessage()) {
+    <div class="success-message">
+      {{ successMessage() }}
+    </div>
+  }
+
+  @if (error()) {
+    <div class="error-message">
+      {{ error() }}
+    </div>
+  }
+</div>

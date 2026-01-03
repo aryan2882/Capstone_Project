@@ -1,0 +1,60 @@
+<mat-card>
+  <mat-card-title>Meter Readings</mat-card-title>
+  <mat-divider></mat-divider>
+
+  <!-- Billing Cycle Dropdown -->
+  <mat-form-field appearance="fill" class="w-100 mt-3">
+    <mat-label>Select Billing Cycle</mat-label>
+    <mat-select [(value)]="selectedCycleId" (selectionChange)="loadReadings()">
+      <mat-option *ngFor="let c of billingCycles" [value]="c.billingCycleId">
+        {{ c.cycleName }} ({{ c.startDate | date:'shortDate' }} - {{ c.endDate | date:'shortDate' }})
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+
+  <!-- Add Reading Button -->
+  <button mat-raised-button color="primary" class="mt-2" (click)="navigateToAdd()">
+    Create Meter Reading
+  </button>
+
+  <!-- Meter Readings Table -->
+  <table mat-table [dataSource]="readings" class="mt-3" *ngIf="readings.length > 0">
+
+    <ng-container matColumnDef="consumer">
+      <th mat-header-cell *matHeaderCellDef> Consumer </th>
+      <td mat-cell *matCellDef="let r"> {{ r.consumerName }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="meter">
+      <th mat-header-cell *matHeaderCellDef> Meter Number </th>
+      <td mat-cell *matCellDef="let r"> {{ r.meterNumber }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="reading">
+      <th mat-header-cell *matHeaderCellDef> Current Reading </th>
+      <td mat-cell *matCellDef="let r"> {{ r.currentReading }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="consumption">
+      <th mat-header-cell *matHeaderCellDef> Consumption </th>
+      <td mat-cell *matCellDef="let r"> {{ r.consumption }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="date">
+      <th mat-header-cell *matHeaderCellDef> Reading Date </th>
+      <td mat-cell *matCellDef="let r"> {{ r.readingDate | date:'short' }} </td>
+    </ng-container>
+
+    <ng-container matColumnDef="remarks">
+      <th mat-header-cell *matHeaderCellDef> Remarks </th>
+      <td mat-cell *matCellDef="let r"> {{ r.remarks }} </td>
+    </ng-container>
+
+    <tr mat-header-row *matHeaderRowDef="displayedColumns"></tr>
+    <tr mat-row *matRowDef="let row; columns: displayedColumns"></tr>
+  </table>
+
+  <p *ngIf="selectedCycleId && readings.length === 0" class="mt-3">
+    No readings available for this billing cycle.
+  </p>
+</mat-card>

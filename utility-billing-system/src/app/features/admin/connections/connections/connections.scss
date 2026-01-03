@@ -1,0 +1,228 @@
+.connections-container {
+  padding: 24px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 24px;
+
+  h1 {
+    margin: 0;
+    font-size: 28px;
+    font-weight: 500;
+    color: #333;
+  }
+
+  .header-actions {
+    display: flex;
+    gap: 12px;
+
+    button {
+      mat-icon {
+        margin-right: 8px;
+      }
+    }
+  }
+}
+
+.filter-card {
+  margin-bottom: 24px;
+
+  .filters {
+    display: flex;
+    gap: 24px;
+    align-items: center;
+    flex-wrap: wrap;
+
+    .search-field {
+      flex: 1;
+      min-width: 250px;
+    }
+
+    .consumer-select {
+      min-width: 200px;
+    }
+
+    .chip-group {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+
+      mat-chip {
+        cursor: pointer;
+        background-color: #f5f5f5;
+        transition: all 0.3s ease;
+
+        &:hover {
+          background-color: #e0e0e0;
+        }
+
+        &.selected {
+          background-color: #667eea;
+          color: white;
+        }
+      }
+    }
+  }
+}
+
+.table-card {
+  .table-container {
+    position: relative;
+    min-height: 400px;
+    overflow-x: auto;
+
+    .table-spinner {
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+    }
+  }
+
+  .connections-table {
+    width: 100%;
+
+    th {
+      font-weight: 600;
+      color: #555;
+      background-color: #f5f5f5;
+    }
+
+    .consumer-cell {
+      display: flex;
+      align-items: center;
+      gap: 12px;
+
+      .consumer-icon {
+        color: #667eea;
+        font-size: 24px;
+        width: 24px;
+        height: 24px;
+      }
+
+      .consumer-details {
+        display: flex;
+        flex-direction: column;
+        gap: 4px;
+
+        strong {
+          color: #333;
+          font-size: 15px;
+        }
+
+        small {
+          color: #666;
+          font-size: 12px;
+        }
+      }
+    }
+
+    .utility-chip {
+      background-color: #e3f2fd;
+      color: #1976d2;
+      font-weight: 500;
+      font-size: 11px;
+    }
+
+    .meter-info {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+
+      mat-icon {
+        color: #666;
+        font-size: 18px;
+        width: 18px;
+        height: 18px;
+      }
+
+      span {
+        font-family: 'Courier New', monospace;
+        font-weight: 500;
+        color: #333;
+      }
+    }
+
+    .load-info {
+      display: flex;
+      align-items: baseline;
+      gap: 4px;
+
+      .load-value {
+        font-size: 16px;
+        font-weight: 600;
+        color: #333;
+      }
+
+      small {
+        font-size: 11px;
+        color: #666;
+      }
+    }
+
+    .tariff-info {
+      small {
+        color: #666;
+        font-size: 13px;
+      }
+    }
+
+    .status-detail {
+      margin-top: 4px;
+
+      small {
+        font-size: 11px;
+        color: #666;
+      }
+    }
+
+    mat-chip {
+      font-size: 11px;
+      min-height: 24px;
+      padding: 0 8px;
+
+      mat-icon {
+        font-size: 14px;
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+      }
+    }
+
+    .status-active {
+      background-color: #4CAF50;
+      color: white;
+    }
+
+    .status-disconnected {
+      background-color: #F44336;
+      color: white;
+    }
+  }
+
+  .no-data {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 40px;
+    color: #999;
+
+    mat-icon {
+      font-size: 64px;
+      width: 64px;
+      height: 64px;
+      margin-bottom: 16px;
+    }
+
+    p {
+      margin: 0;
+      font-size: 16px;
+    }
+  }
+}

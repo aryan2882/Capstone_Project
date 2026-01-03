@@ -1,0 +1,89 @@
+<!-- src/app/components/bills/bill-list/bill-list.component.html -->
+<div class="bill-list-container">
+  <div class="header">
+    <h2>All Bills</h2>
+    <div class="header-actions">
+      <button class="btn btn-success" (click)="openGenerateModal()">+ Generate Bill</button>
+      <button class="btn" (click)="loadBills()">Refresh</button>
+    </div>
+  </div>
+
+  <div class="search-box">
+    <input
+      type="text"
+      [value]="searchTerm()"
+      (input)="onSearchChange($any($event.target).value)"
+      placeholder="Search bills..."
+      class="search-input"
+    />
+  </div>
+
+  @if (loading()) {
+    <div class="loading">
+      <div class="spinner"></div>
+      <p>Loading bills...</p>
+    </div>
+  }
+
+  @if (error() && !loading()) {
+    <div class="error">{{ error() }}</div>
+  }
+
+  @if (!loading() && !error()) {
+    <div class="table-container">
+      <table class="bills-table">
+        <thead>
+          <tr>
+            <th>Bill Number</th>
+            <th>Consumer Name</th>
+            <th>Meter Number</th>
+            <th>Utility Type</th>
+            <th>Cycle</th>
+            <th>Consumption</th>
+            <th>Total Amount</th>
+            <th>Paid Amount</th>
+            <th>Outstanding Amount</th>
+            <th>Bill Date</th>
+            <th>Due Date</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (bill of filteredBills(); track bill.billId) {
+            <tr>
+              <td>{{ bill.billNumber }}</td>
+              <td>{{ bill.consumerName }}</td>
+              <td>{{ bill.meterNumber }}</td>
+              <td>{{ bill.utilityTypeName }}</td>
+              <td>{{ bill.cycleName }}</td>
+              <td>{{ bill.consumption }}</td>
+              <td>{{ formatCurrency(bill.totalAmount) }}</td>
+              <td>{{ formatCurrency(bill.paidAmount) }}</td>
+              <td>{{ formatCurrency(bill.outstandingAmount) }}</td>
+              <td>{{ formatDate(bill.billDate) }}</td>
+              <td>{{ formatDate(bill.dueDate) }}</td>
+              <td>{{ bill.status }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="12" class="no-data">No bills found</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  }
+
+  <!-- Generate Bill Modal -->
+  @if (showGenerateModal()) {
+    <div class="modal-overlay" (click)="closeGenerateModal()">
+      <div class="modal-content" (click)="$event.stopPropagation()">
+        <div class="modal-header">
+          <h3>Generate New Bill</h3>
+          <button class="close-btn" (click)="closeGenerateModal()">&times;</button>
+        </div>
+        <app-generate-bill (billGenerated)="closeGenerateModal()"></app-generate-bill>
+      </div>
+    </div>
+  }
+</div>

@@ -1,0 +1,135 @@
+.full-width {
+  width: 100%;
+  margin-bottom: 16px;
+}
+
+.half-width {
+  width: calc(50% - 8px);
+  margin-bottom: 16px;
+}
+
+.form-row {
+  display: flex;
+  gap: 16px;
+}
+
+mat-dialog-content {
+  min-width: 700px;
+  max-height: 70vh;
+  padding: 24px;
+  overflow-y: auto;
+}
+
+.section-title {
+  color: #667eea;
+  font-size: 16px;
+  font-weight: 500;
+  margin: 24px 0 16px 0;
+  padding-bottom: 8px;
+  border-bottom: 2px solid #667eea;
+}
+
+.toggle-field {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+  margin: 16px 0;
+  padding: 16px;
+  background-color: #f5f5f5;
+  border-radius: 8px;
+
+  .toggle-label {
+    font-weight: 500;
+    font-size: 14px;
+  }
+
+  .toggle-hint {
+    color: #666;
+    font-size: 12px;
+    margin-left: 52px;
+  }
+}
+
+.slabs-section {
+  margin-top: 24px;
+
+  .slabs-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 16px;
+
+    .section-title {
+      margin: 0;
+      border: none;
+    }
+  }
+
+  .slabs-list {
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .slab-item {
+    border: 2px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 16px;
+    background-color: #fafafa;
+
+    .slab-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 12px;
+
+      .slab-number {
+        font-weight: 500;
+        color: #667eea;
+        font-size: 14px;
+      }
+    }
+
+    .slab-fields {
+      display: flex;
+      gap: 12px;
+
+      .slab-field {
+        flex: 1;
+        margin-bottom: 0;
+      }
+    }
+  }
+
+  .slab-info {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    padding: 16px;
+    background-color: #fff3e0;
+    border-radius: 8px;
+
+    mat-icon {
+      color: #f57c00;
+    }
+
+    p {
+      margin: 0;
+      color: #e65100;
+      font-size: 14px;
+    }
+  }
+}
+
+mat-dialog-actions {
+  padding: 16px 24px;
+
+  button {
+    mat-icon {
+      margin-right: 4px;
+      font-size: 18px;
+      width: 18px;
+      height: 18px;
+    }
+  }
+}

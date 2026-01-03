@@ -1,0 +1,105 @@
+<h2 mat-dialog-title>
+  <mat-icon>power</mat-icon>
+  Connection Details
+</h2>
+
+<mat-dialog-content>
+  <div class="connection-details">
+    <!-- Consumer Info -->
+    <div class="detail-section">
+      <h3>Consumer Information</h3>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>Consumer Name:</label>
+          <span>{{connection.consumerName}}</span>
+        </div>
+        <div class="detail-item">
+          <label>Consumer ID:</label>
+          <span>{{connection.consumerId}}</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Connection Info -->
+    <div class="detail-section">
+      <h3>Connection Information</h3>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>Connection ID:</label>
+          <span>{{connection.connectionId}}</span>
+        </div>
+        <div class="detail-item">
+          <label>Meter Number:</label>
+          <span class="meter-number">{{connection.meterNumber}}</span>
+        </div>
+        <div class="detail-item">
+          <label>Utility Type:</label>
+          <span>{{connection.utilityTypeName}}</span>
+        </div>
+        <div class="detail-item">
+          <label>Tariff Plan:</label>
+          <span>{{connection.tariffName}}</span>
+        </div>
+        <div class="detail-item">
+          <label>Connection Load:</label>
+          <span>{{connection.connectionLoad}} kW</span>
+        </div>
+        <div class="detail-item">
+          <label>Initial Reading:</label>
+          <span>{{connection.initialReading}} units</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider></mat-divider>
+
+    <!-- Dates -->
+    <div class="detail-section">
+      <h3>Important Dates</h3>
+      <div class="detail-grid">
+        <div class="detail-item">
+          <label>Activation Date:</label>
+          <span>{{formatDate(connection.activationDate)}}</span>
+        </div>
+        <div class="detail-item">
+          <label>Created At:</label>
+          <span>{{formatDate(connection.createdAt)}}</span>
+        </div>
+        <div class="detail-item" *ngIf="connection.status==='disconnected' && connection.disconnectionDate">
+          <label>Disconnection Date:</label>
+          <span class="disconnected">{{formatDate(connection.disconnectionDate)}}</span>
+        </div>
+      </div>
+    </div>
+
+    <mat-divider *ngIf="connection.status==='disconnected' && connection.disconnectionReason"></mat-divider>
+
+    <!-- Disconnection Info -->
+    <div class="detail-section" *ngIf="connection.status==='disconnected' && connection.disconnectionReason">
+      <h3>Disconnection Information</h3>
+      <div class="disconnection-reason">
+        <mat-icon>info</mat-icon>
+        <p>{{connection.disconnectionReason}}</p>
+      </div>
+    </div>
+
+    <!-- Status Badge -->
+    <div class="status-section">
+      <mat-icon [class.active]="connection.status==='Active'" [class.inactive]="connection.status==='disconnected'">
+        {{connection.status==='Active' ? 'power' : 'power_off'}}
+      </mat-icon>
+      <span [class.active]="connection.status==='Active'" [class.inactive]="connection.status==='disconnected'">
+        {{connection.status==='Active' ? 'Active Connection' : 'Disconnected'}}
+      </span>
+    </div>
+  </div>
+</mat-dialog-content>
+
+<mat-dialog-actions align="end">
+  <button mat-raised-button color="primary" (click)="onClose()">
+    <mat-icon>close</mat-icon>
+    Close
+  </button>
+</mat-dialog-actions>
