@@ -1,4 +1,4 @@
-<img width="1919" height="929" alt="image" src="https://github.com/user-attachments/assets/2b777a60-27d1-40ee-8a96-2ff85b6b4746" /># Utility Billing System
+# Utility Billing System
 
 A full-stack utility billing management system built with .NET Core and Angular.
 
@@ -78,8 +78,10 @@ The Angular app will run at: `http://localhost:4200`
 
 Default Login Credentials
 Admin:
+```bash
 •	Email: admin@utilitybilling.com
 •	Password: Admin@123
+```
 
 
 ## Database Schema
