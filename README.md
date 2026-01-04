@@ -90,5 +90,3 @@ See Database Diagram in SSMS for complete schema visualization.
 ![database_diagram](https://github.com/user-attachments/assets/3478fc89-0d74-4ef7-a924-d030a2192e14)
 
 
--=
-This project is for educational purposes (Capstone Project).
