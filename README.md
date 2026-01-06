@@ -99,3 +99,16 @@ See Database Diagram in SSMS for complete schema visualization.
 ![database_diagram](https://github.com/user-attachments/assets/3478fc89-0d74-4ef7-a924-d030a2192e14)
 
 
+Here are some UI Screenshots
+
+Admin Dashboard
+<img width="1583" height="814" alt="image" src="https://github.com/user-attachments/assets/ad543d9d-acdb-43cd-a6ae-bca2be57a2b3" />
+
+BillingOfficer Dashboard
+<img width="1624" height="815" alt="image" src="https://github.com/user-attachments/assets/d3f06ac7-4114-4a4b-86ad-e6fc0f4d571b" />
+
+AccountOfficer Dashboard
+<img width="1568" height="792" alt="image" src="https://github.com/user-attachments/assets/bc0dfe2f-cbf7-42e1-b2c1-aeedf82f5072" />
+
+Consumer Dashboard
+<img width="1561" height="789" alt="image" src="https://github.com/user-attachments/assets/611a3f01-0e66-42b1-b1d0-7e66696da421" />
